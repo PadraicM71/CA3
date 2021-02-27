@@ -77,7 +77,7 @@ class LocalUpdateSections(object):
 ################################################
 
 
-courseid = "14"  # Exchange with valid id.
+courseid = "4"  # Exchange with valid id.
 # Get all sections of the course.
 sec = LocalGetSections(courseid)
 
@@ -95,7 +95,7 @@ print(month.strftime("%V"))
 data = [{'type': 'num', 'section': 0, 'summary': '', 'summaryformat': 1, 'visible': 1 , 'highlight': 0, 'sectionformatoptions': [{'name': 'level', 'value': '1'}]}]
 
 # Assemble the correct summary
-summary = '<a href="https://mikhail-cct.github.io/ca3-test/wk1/">Week 1: Introduction</a><br>'
+summary = '<a href="https://mikhail-cct.github.io/ca3-test/wk1/">Week 1: IntroductionXX</a><br>'
 
 # Assign the correct summary
 data[0]['summary'] = summary
