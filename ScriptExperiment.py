@@ -95,7 +95,7 @@ print(month.strftime("%V"))
 data = [{'type': 'num', 'section': 0, 'summary': '', 'summaryformat': 1, 'visible': 1 , 'highlight': 0, 'sectionformatoptions': [{'name': 'level', 'value': '1'}]}]
 
 # Assemble the correct summary
-summary = '<a href="https://mikhail-cct.github.io/ca3-test/wk1/">Week 1: IntroductionTest</a><br>'
+summary = '<a href="https://mikhail-cct.github.io/ca3-test/wk1/">Week 1: IntroductionTest2</a><br>' # note different quotes
 
 # Assign the correct summary
 data[0]['summary'] = summary
@@ -106,5 +106,44 @@ data[0]['section'] = 1
 # Write the data back to Moodle
 sec_write = LocalUpdateSections(courseid, data)
 
+#---------------------------------------------------------------------------------------
+
+# Read Information
 sec = LocalGetSections(courseid)
+
+# print(json.dumps(sec.getsections[0]['summary'], indent=4, sort_keys=True))
+
+print("------------------------------------------------------")
 print(json.dumps(sec.getsections[1]['summary'], indent=4, sort_keys=True))
+# we want to write the summary!
+# get back a dictionary from the API - grab key called summary
+print(json.dumps(sec.getsections[1]['sectionnum'], indent=4, sort_keys=True))
+print(json.dumps(sec.getsections[1]['name'], indent=4, sort_keys=True))
+print("------------------------------------------------------")
+print(json.dumps(sec.getsections[2]['summary'], indent=4, sort_keys=True))
+print(json.dumps(sec.getsections[2]['sectionnum'], indent=4, sort_keys=True))
+print(json.dumps(sec.getsections[2]['name'], indent=4, sort_keys=True))
+print("------------------------------------------------------")
+# Reading Information: (getsections)
+# can now identify way to loop (for) through sections any maybe build dictionary
+# of all of the slides that are present in any of the sections if you like.
+# get section - grab title and start doing things with it.
+# So thats reading our information sorted!
+#--------------------------------------------------------------------------------
+# Writing Information: (updatesections)
+#  Assemble the payload
+data = [{'type': 'num', 'section': 0, 'summary': '', 'summaryformat': 1, 'visible': 1 , 'highlight': 0, 'sectionformatoptions': [{'name': 'level', 'value': '1'}]}]
+# Assemble the correct summary
+summary = '<a href="https://mikhail-cct.github.io/ca3-test/wk1/">Week X: IntroductionTestXXX</a><br>' # note different quotes
+# Assign the correct summary
+data[0]['summary'] = summary
+# Set the correct section number
+data[0]['section'] = 3 # #############this will update the sections
+# Write the data back to Moodle
+sec_write = LocalUpdateSections(courseid, data)
+
+#--------------------------------------------------------------------------------
+
+# Google Drive
+# https://drive.google.com/file/d/1vyPoSlUc5hcXajllDyaqMKvlJOiYxbNH/view?usp=sharing
+# 
