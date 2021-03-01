@@ -1,8 +1,17 @@
+# CA3 Main
+
 from requests import get, post
 import json
 from dateutil import parser
 import datetime
 
+'''
+
+# Location to build the main SCRIPT
+# Moodle analysis to take place here
+# Later will merge with CA3FileSystem.py and CA3Recordings.py
+
+'''
 # Module variables to connect to moodle api:
 # Insert token and URL for your site here.
 # Mind that the endpoint can start with "/moodle" depending on your installation.
@@ -81,38 +90,54 @@ courseid = "4"  # Exchange with valid id.
 # Get all sections of the course.
 sec = LocalGetSections(courseid)
 
+#----------------------------------------------------------------------------
 # Output readable JSON, but print only summary
-print(json.dumps(sec.getsections[1]['summary'], indent=4, sort_keys=True))
+# print(json.dumps(sec.getsections[0]['summary'], indent=4, sort_keys=True))
 
-# Split the section name by dash and convert the date into the timestamp, it takes the current year, so think of a way for making sure it has the correct year!
-month = parser.parse(list(sec.getsections)[1]['name'].split('-')[0])
-# Show the resulting timestamp
-print(month)
-# Extract the week number from the start of the calendar year
-print(month.strftime("%V"))
+# # Split the section name by dash and convert the date into the timestamp, it takes the current year, so think of a way for making sure it has the correct year!
+# month = parser.parse(list(sec.getsections)[1]['name'].split('-')[0])
+# # Show the resulting timestamp
+# print(month)
+# # Extract the week number from the start of the calendar year
+# print(month.strftime("%V"))
 
 #  Assemble the payload
 data = [{'type': 'num', 'section': 0, 'summary': '', 'summaryformat': 1, 'visible': 1 , 'highlight': 0, 'sectionformatoptions': [{'name': 'level', 'value': '1'}]}]
 
-# Assemble the correct summary
-summary = '<a href="https://mikhail-cct.github.io/ca3-test/wk1/">Week 1: IntroductionTest2</a><br>' # note different quotes
+# # Assemble the correct summary
+# summary = '<a href="https://mikhail-cct.github.io/ca3-test/wk1/">Week 1: IntroductionTest1</a><br>' # note different quotes
 
-# Assign the correct summary
-data[0]['summary'] = summary
+# # Assign the correct summary
+# data[0]['summary'] = summary
 
-# Set the correct section number
-data[0]['section'] = 1
+# # Set the correct section number
+# data[0]['section'] = 4
 
 # Write the data back to Moodle
-sec_write = LocalUpdateSections(courseid, data)
+# sec_write = LocalUpdateSections(courseid, data)
+#---------------------------------------------------------------------------------------
+# Writing Information: (updatesections)
+
+# Function to write to Moodle summary
+# wk is Moodle page section number
+def writeLink(wk, link): # update sections wk1 section 1 etc
+    summary = link
+    data[0]['summary'] = summary
+    data[0]['section'] = wk
+    sec_write = LocalUpdateSections(courseid, data)
+    return
+link = '<a href="https://mikhail-cct.github.io/ca3-test/wkx/">Week X: Introduction Susan</a><br>'
+writeLink(2, link)
+
 
 #---------------------------------------------------------------------------------------
 
 # Read Information
 sec = LocalGetSections(courseid)
 
-# print(json.dumps(sec.getsections[0]['summary'], indent=4, sort_keys=True))
-
+print(json.dumps(sec.getsections[0]['summary'], indent=4, sort_keys=True))
+print(json.dumps(sec.getsections[0]['name'], indent=4, sort_keys=True))
+print(json.dumps(sec.getsections[0]['sectionnum'], indent=4, sort_keys=True))
 print("------------------------------------------------------")
 print(json.dumps(sec.getsections[1]['summary'], indent=4, sort_keys=True))
 # we want to write the summary!
@@ -130,20 +155,16 @@ print("------------------------------------------------------")
 # get section - grab title and start doing things with it.
 # So thats reading our information sorted!
 #--------------------------------------------------------------------------------
-# Writing Information: (updatesections)
-#  Assemble the payload
-data = [{'type': 'num', 'section': 0, 'summary': '', 'summaryformat': 1, 'visible': 1 , 'highlight': 0, 'sectionformatoptions': [{'name': 'level', 'value': '1'}]}]
-# Assemble the correct summary
-summary = '<a href="https://mikhail-cct.github.io/ca3-test/wk1/">Week X: IntroductionTestXXX</a><br>' # note different quotes
-# Assign the correct summary
-data[0]['summary'] = summary
-# Set the correct section number
-data[0]['section'] = 3 # #############this will update the sections
-# Write the data back to Moodle
-sec_write = LocalUpdateSections(courseid, data)
+
+# Split the section name by dash and convert the date into the timestamp, it takes the current year, so think of a way for making sure it has the correct year!
+month = parser.parse(list(sec.getsections)[1]['name'].split('-')[0])
+# Show the resulting timestamp
+print(month)
+
+# Extract the week number from the start of the calendar year
+print(month.strftime("%V"))
+
+
 
 #--------------------------------------------------------------------------------
 
-# Google Drive
-# https://drive.google.com/file/d/1vyPoSlUc5hcXajllDyaqMKvlJOiYxbNH/view?usp=sharing
-# 
