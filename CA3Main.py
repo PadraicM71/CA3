@@ -126,7 +126,7 @@ def writeLink(wk, link): # update sections wk1 section 1 etc
     data[0]['section'] = wk
     sec_write = LocalUpdateSections(courseid, data)
     return
-link = '<a href="https://mikhail-cct.github.io/ca3-test/wkx/">Week X: Introduction Susan</a><br>'
+link = '<a href="https://mikhail-cct.github.io/ca3-test/wkx/">Week X: Introduction Susan2</a><br>'
 writeLink(2, link)
 
 
