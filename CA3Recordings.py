@@ -4,6 +4,7 @@ import re
 
 
 '''
+# pip install requests lxml bs4
 
 # This is initial experiments to capture RECORDING links and titles
 
@@ -39,12 +40,20 @@ print(soup.select('title'))
 
 gdrive = res.text
 
+# # vLink = re.search(r'.*\n.*\.mp4',gdrive)
 # vLink = re.search(r'.*\n.*\.mp4',gdrive)
-vLink = re.search(r'.*\n.*\.mp4',gdrive)
-print(vLink)
+# print(vLink)
 
+
+# # works
 # vTitle = re.findall(r'\,\"([^\"]*\.mp4)\"',gdrive)
 # print(vTitle)
+# for title in re.finditer(r'\,\"([^\"]*\.mp4)\"',gdrive):
+#     print(title)
+
+
+
+
 
 '''
 EXPERIEMENT:
@@ -61,9 +70,26 @@ EXPERIEMENT:
 # [["1vyPoSlUc5hcXajllDyaqMKvlJOiYxbNH",["1pFHUrmpLv9gEJsvJYKxMdISuQuQsd_qX"]
 # ,"2020-09-29 [18:46-19:44] – Prog: OO Approaches.mp4","video/mp4"
 
+# ,"2020-09-29 [18:46-19:44] – Prog: OO Approaches.mp4","video/mp4"
+
 '''
 
-#This is working now - complete list of unique recording links
-for match in re.finditer(r'"(\S{33})",\S"1pFHUrmpLv9gEJsvJYKxMdISuQuQsd_qX"',gdrive):
-    print(match.group(1))
+#This is working now - complete list of unique recording identifiers
+linkIdent = []
+for link in re.finditer(r'"(\S{33})",\S"1pFHUrmpLv9gEJsvJYKxMdISuQuQsd_qX"',gdrive):
+    linkIdent.append(link.group(1))
+linkId = linkIdent[:len(linkIdent)//2]
+print(linkId)
+
+
+# https://drive.google.com/file/d/1_GYn_eb9WVSA-VU4hH-87XAuCKIXD22x/view?usp=sharing
+
+
+
+titleIdent = []
+for title in re.finditer(r',"(20\d\d-\d\d-\d\d.*.mp4)","',gdrive):
+    titleIdent.append(title.group(1))
+titleId = titleIdent[:len(titleIdent)//2]
+print(titleId)
+
 
