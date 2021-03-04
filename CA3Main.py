@@ -7,6 +7,7 @@ import datetime
 import bs4
 import re
 
+semesterStartYear = 2020
 
 '''
 
@@ -239,11 +240,10 @@ date1 = parser.parse(list(sec.getsections)[1]['name'].split('-')[0])
 
 # print(date1.strftime("%x"))
 # This is date from Moodle
-termStartYear = 2020
-date1 = parser.parse(list(sec.getsections)[1]['name'].split('-')[0])
-date1 = date1.replace(year=termStartYear) # force year on it as its using current year date
-print(date1)
-print(date1.strftime("%V")) # gets ISO week number
+# date1 = parser.parse(list(sec.getsections)[1]['name'].split('-')[0])
+# date1 = date1.replace(year=semesterStartYear) # force year on it as its using current year date
+# print(date1)
+# print(date1.strftime("%V")) # gets ISO week number
 # print(type(date1))
 # dateOne = str(date1)
 # dateTwo = (dateOne[:10])
@@ -274,8 +274,8 @@ print(recDateObj.strftime("%V"))
 # print(titleId[8] + "  LINK: " + 'https://drive.google.com/file/d/' + linkId[8] + '/view?usp=sharing')
 
 
-def classRecording(weekNumber):
-    x = '<a href=\"https://drive.google.com/file/d/' + linkId[weekNumber] + '/view?usp=sharing\"' + '>' + titleId[weekNumber] + '</a>'
+def classRecording(number):
+    x = '<a href=\"https://drive.google.com/file/d/' + linkId[number] + '/view?usp=sharing\"' + '>' + titleId[number] + '</a>'
     return x # print('<a href=\"https://drive.google.com/file/d/' + linkId[weekNumber] + '/view?usp=sharing\"' + '>' + titleId[weekNumber] + '</a>')
 
 classRecording(2)
@@ -301,4 +301,42 @@ def write_summary(wk, link): # update sections wk1 section 1 etc
 for_push = (classRecording(5)+'<br>'+"newline2"+'<br>'+classRecording(6))
 
 write_summary(5, for_push)
+
+def iso_week_number_moodle(week):
+    date = parser.parse(list(sec.getsections)[week]['name'].split('-')[0])
+    date = date.replace(year=semesterStartYear) # force year on it as its using current year date
+    date = date.strftime("%V")
+    return date
+
+print(iso_week_number_moodle(5))
+
+def iso_week_number_recordings(week):
+    # Takes date of recording from title str scraped off GoogleDrive page
+    # It then converts it to a date object
+    # Can now extract ISO week number
+    recDate = (titleId[week][:10])
+    recDateObj = datetime.datetime.strptime(recDate, '%Y-%m-%d')
+    return (recDateObj.strftime("%V"))
+
+print(iso_week_number_recordings(3))
+
+end_week = 8
+# def gather_recordings(week):
+#     for end_week in 
+
+
+
+# Takes date of recording from title str scraped off GoogleDrive page
+# It then converts it to a date object
+# Can now extract ISO week number
+# recDate = (titleId[1][:10])
+# recDateObj = datetime.datetime.strptime(recDate, '%Y-%m-%d')
+# print(recDateObj.date())
+# print(recDateObj.strftime("%V"))
+
+# date1 = parser.parse(list(sec.getsections)[1]['name'].split('-')[0])
+# date1 = date1.replace(year=termStartYear) # force year on it as its using current year date
+# print(date1)
+# print(date1.strftime("%V")) # gets ISO week number
+
 
