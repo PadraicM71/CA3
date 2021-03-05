@@ -204,25 +204,25 @@ titleId = titleConstruct[:len(titleConstruct)//2]
 titleId.insert(0, "Class recording not available yet - Please try later. ")
 number_of_recordings = len(titleId) ########################################### used later to calculate iso week - take note!
 # Insert message at index 0 - we will use this later to represent case where no recording available yet
-print(titleId) # debug
+# print(titleId) # debug
 
 
-
+#----------------------------------------------------------------------------------------------------------------------------------
 # Takes date of recording from title str scraped off GoogleDrive page
 # It then converts it to a date object
 # Can now extract ISO week number
-recDate = (titleId[1][:10])
-recDateObj = datetime.datetime.strptime(recDate, '%Y-%m-%d')
-print(recDateObj.date())
-print(recDateObj.strftime("%V"))
-
+# recDate = (titleId[1][:10])
+# recDateObj = datetime.datetime.strptime(recDate, '%Y-%m-%d')
+# print(recDateObj.date())
+# print(recDateObj.strftime("%V"))
+#-------------------------------------------------------------------------------------------------------------------------------------
 
 
 def classRecording(number):
     x = '<a href=\"https://drive.google.com/file/d/' + linkId[number] + '/view?usp=sharing\"' + '>' + titleId[number] + '</a>'
     return x # print('<a href=\"https://drive.google.com/file/d/' + linkId[weekNumber] + '/view?usp=sharing\"' + '>' + titleId[weekNumber] + '</a>')
 
-classRecording(2)
+# print(classRecording(2))
 
 
 #----------------------------------------------------------------------------------------------------------
@@ -239,12 +239,6 @@ def write_summary(wk, link): # update sections wk1 section 1 etc
 # link = '<a href="https://drive.google.com/file/d/1elgdm2482AMcARz_NUVTjg8KBPmoLTxj/view?usp=sharing">2020-10-06 [17:45-19:44] – Prog: OO Approaches.mp4</a>'
 
 
-# Experimenting 
-# Assemble the payload for push to summary in a list for_push
-for_push = (classRecording(5)+'<br>'+"newline2"+'<br>'+classRecording(6))
-
-write_summary(5, for_push)
-
 
 #-----------------------------------------------------------------------------------------------------------
 def iso_week_number_moodle(week):
@@ -252,7 +246,7 @@ def iso_week_number_moodle(week):
     date = date.replace(year=semesterStartYear) # force year on it as its using current year date
     date = date.strftime("%V")
     return date
-print(iso_week_number_moodle(5))
+# print(iso_week_number_moodle(5))
 
 def iso_week_number_recordings(title_from_recording_list):
     # Takes date of recording from title str scraped off GoogleDrive page
@@ -261,15 +255,31 @@ def iso_week_number_recordings(title_from_recording_list):
     recDate = (titleId[title_from_recording_list][:10]) # take date information from string titleId
     recDateObj = datetime.datetime.strptime(recDate, '%Y-%m-%d') # make date object
     return (recDateObj.strftime("%V")) # return iso week number
-print(iso_week_number_recordings(3))
+# print(iso_week_number_recordings(3))
 
 
 
 # ok experimenting looks good here - keep error free by linking to number of recordings - defined above titleId
-n=1
-while n < number_of_recordings: # index 0 not used implies dont need <= (only require <)
-    print(iso_week_number_recordings(n))
-    n = n+1
+def match_week_to_recordings(week_number):
+    n=1
+    rec = []
+    while n < number_of_recordings: # index 0 not used implies dont need <= (only require <)
+        if iso_week_number_recordings(n) == iso_week_number_moodle(week_number):
+            rec.append(classRecording(n))
+        n=n+1
+    return rec
 
+# print(match_week_to_recordings(8))
+
+
+# Experimenting 
+# # Assemble the payload for push to summary in a list for_push
+# for_push = match_week_to_recordings(1)
+# write_summary(5, match_week_to_recordings(1))
+
+payload = [] # this will be used for push to moodle
+payload.append("test")
+payload.append(match_week_to_recordings(8))
+print(payload)
 
 
