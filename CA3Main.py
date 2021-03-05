@@ -258,6 +258,14 @@ def iso_week_number_recordings(title_from_recording_list):
 # print(iso_week_number_recordings(3))
 
 
+# Merge any list to a string - needed to push string to Moodle
+def merged_list_to_string(any_list):
+    merged_list = ''
+    for element in any_list:
+        merged_list += str(element)
+    return merged_list
+
+
 
 # ok experimenting looks good here - keep error free by linking to number of recordings - defined above titleId
 def match_week_to_recordings(week_number):
@@ -265,9 +273,13 @@ def match_week_to_recordings(week_number):
     rec = []
     while n < number_of_recordings: # index 0 not used implies dont need <= (only require <)
         if iso_week_number_recordings(n) == iso_week_number_moodle(week_number):
-            rec.append(classRecording(n))
-        n=n+1
+            rec.append(classRecording(n)+"<br>")
+        n+=1
     return rec
+
+
+
+
 
 # print(match_week_to_recordings(8))
 
@@ -277,9 +289,18 @@ def match_week_to_recordings(week_number):
 # for_push = match_week_to_recordings(1)
 # write_summary(5, match_week_to_recordings(1))
 
-payload = [] # this will be used for push to moodle
-payload.append("test")
-payload.append(match_week_to_recordings(8))
-print(payload)
 
+#Assemble payload for push
+# Final object for push has to be continious string with appropriate HTML tags
+payload = [] # this will be used for push to moodle
+payload.append("test<br>")
+# print(payload)
+payload.append(merged_list_to_string(match_week_to_recordings(8))) # merge_list to string for all further additions
+print(payload)
+payload_for_push = (merged_list_to_string(payload))
+
+n=1
+while n<9: 
+    write_summary(n,merged_list_to_string(match_week_to_recordings(n)))
+    n = n+1
 
