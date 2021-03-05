@@ -172,9 +172,6 @@ sec = LocalGetSections(courseid)
 # This is initial experiments to capture RECORDING links and titles
 
 '''
-
-
-
 res = requests.get("https://drive.google.com/drive/folders/1pFHUrmpLv9gEJsvJYKxMdISuQuQsd_qX")
 
 soup = bs4.BeautifulSoup(res.text,"lxml")
@@ -182,30 +179,8 @@ soup = bs4.BeautifulSoup(res.text,"lxml")
 gdrive = res.text
 
 
-'''
-EXPERIEMENT:
 
-# vTitle2 = re.findall(r'data-id="(\S{33})"',gdrive) # this works
-# print(vTitle2)
-
-# vTitle3 = re.search(r'"(\S{33})",\S"1pFHUrmpLv9gEJsvJYKxMdISuQuQsd_qX"',gdrive)
-# print (vTitle3.group(1))
-
-# vTitle3 = re.search(r'"(\S{33})",\S"1pFHUrmpLv9gEJsvJYKxMdISuQuQsd_qX"',gdrive)
-# print (vTitle3.group(1))
-
-# [["1vyPoSlUc5hcXajllDyaqMKvlJOiYxbNH",["1pFHUrmpLv9gEJsvJYKxMdISuQuQsd_qX"]
-# ,"2020-09-29 [18:46-19:44] – Prog: OO Approaches.mp4","video/mp4"
-
-# ,"2020-09-29 [18:46-19:44] – Prog: OO Approaches.mp4","video/mp4"
-
-'''
-
-
-
-
-
-# This is working now - complete list of unique recording google identifiers.
+# linkId complete list of unique recording google identifiers - starting at index 1.
 # Create a list containing all individual class recording unique 33 characters google ID.
 linkConstruct = []
 for link in re.finditer(r'"(\S{33})",\S"1pFHUrmpLv9gEJsvJYKxMdISuQuQsd_qX"',gdrive):
@@ -219,7 +194,7 @@ linkId.insert(0, " ") # Insert blank at index 0 - we will use this later to repr
 # https://drive.google.com/file/d/14pVDe0l1SYcpQxqsfW32modTbxhMEIcJ/view?usp=sharing # testing
 
 
-#This is working now - complete list of unique recording class title identifiers
+# titleId complete list of unique recording class title identifiers - starting at index 1.
 # Create a list containing all individual class recording titles.
 titleConstruct = []
 for title in re.finditer(r',"(20\d\d-\d\d-\d\d.*.mp4)","',gdrive):
@@ -227,33 +202,9 @@ for title in re.finditer(r',"(20\d\d-\d\d-\d\d.*.mp4)","',gdrive):
 # Above Regex returns duplicate list - remove last half to have just 1 complete list.
 titleId = titleConstruct[:len(titleConstruct)//2]
 titleId.insert(0, "Class recording not available yet - Please try later. ")
+number_of_recordings = len(titleId) ########################################### used later to calculate iso week - take note!
 # Insert message at index 0 - we will use this later to represent case where no recording available yet
 print(titleId) # debug
-
-
-
-
-# Dates
-
-# Split the section name by dash and convert the date into the timestamp, it takes the current year, so think of a way for making sure it has the correct year!
-date1 = parser.parse(list(sec.getsections)[1]['name'].split('-')[0])
-
-# print(date1.strftime("%x"))
-# This is date from Moodle
-# date1 = parser.parse(list(sec.getsections)[1]['name'].split('-')[0])
-# date1 = date1.replace(year=semesterStartYear) # force year on it as its using current year date
-# print(date1)
-# print(date1.strftime("%V")) # gets ISO week number
-# print(type(date1))
-# dateOne = str(date1)
-# dateTwo = (dateOne[:10])
-# print(dateTwo)
-# print(type(dateTwo))
-# # print(dateOne)
-# dateOneObj = datetime.datetime.strptime(dateTwo, '%Y-%m-%d')
-# # # dateOneObj = date1.strftime("2020-%m-%d")
-# # print (dateOneObj)
-# print(dateOneObj.strftime("%V"))
 
 
 
@@ -267,22 +218,14 @@ print(recDateObj.strftime("%V"))
 
 
 
-# idtest = "14pVDe0l1SYcpQxqsfW32modTbxhMEIcJ"
-# testId = 'https://drive.google.com/file/d/' + idtest + '/view?usp=sharing'
-# print(testId)
-
-# print(titleId[8] + "  LINK: " + 'https://drive.google.com/file/d/' + linkId[8] + '/view?usp=sharing')
-
-
 def classRecording(number):
     x = '<a href=\"https://drive.google.com/file/d/' + linkId[number] + '/view?usp=sharing\"' + '>' + titleId[number] + '</a>'
     return x # print('<a href=\"https://drive.google.com/file/d/' + linkId[weekNumber] + '/view?usp=sharing\"' + '>' + titleId[weekNumber] + '</a>')
 
 classRecording(2)
 
-# <a href="https://drive.google.com/file/d/1vyPoSlUc5hcXajllDyaqMKvlJOiYxbNH/view?usp=sharing">2020-09-29 [18:46-19:44] – Prog: OO Approaches.mp4</a><br>"test"
 
-#-------------------------------------------
+#----------------------------------------------------------------------------------------------------------
 # Writing Information: (updatesections)
 
 # Function to write to Moodle summary
@@ -302,6 +245,8 @@ for_push = (classRecording(5)+'<br>'+"newline2"+'<br>'+classRecording(6))
 
 write_summary(5, for_push)
 
+
+#-----------------------------------------------------------------------------------------------------------
 def iso_week_number_moodle(week):
     date = parser.parse(list(sec.getsections)[week]['name'].split('-')[0])
     date = date.replace(year=semesterStartYear) # force year on it as its using current year date
@@ -310,33 +255,22 @@ def iso_week_number_moodle(week):
 
 print(iso_week_number_moodle(5))
 
-def iso_week_number_recordings(week):
+def iso_week_number_recordings(wk):
     # Takes date of recording from title str scraped off GoogleDrive page
     # It then converts it to a date object
     # Can now extract ISO week number
-    recDate = (titleId[week][:10])
+    recDate = (titleId[wk][:10])
     recDateObj = datetime.datetime.strptime(recDate, '%Y-%m-%d')
     return (recDateObj.strftime("%V"))
 
 print(iso_week_number_recordings(3))
 
-end_week = 8
-# def gather_recordings(week):
-#     for end_week in 
 
 
-
-# Takes date of recording from title str scraped off GoogleDrive page
-# It then converts it to a date object
-# Can now extract ISO week number
-# recDate = (titleId[1][:10])
-# recDateObj = datetime.datetime.strptime(recDate, '%Y-%m-%d')
-# print(recDateObj.date())
-# print(recDateObj.strftime("%V"))
-
-# date1 = parser.parse(list(sec.getsections)[1]['name'].split('-')[0])
-# date1 = date1.replace(year=termStartYear) # force year on it as its using current year date
-# print(date1)
-# print(date1.strftime("%V")) # gets ISO week number
+# ok experimenting looks good here - keep error free by linking to number of recordings
+n=1 
+while n < number_of_recordings:
+    print(iso_week_number_recordings(n))
+    n = n+1
 
 
