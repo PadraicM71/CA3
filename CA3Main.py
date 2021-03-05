@@ -254,13 +254,13 @@ def iso_week_number_moodle(week):
     return date
 print(iso_week_number_moodle(5))
 
-def iso_week_number_recordings(wk):
+def iso_week_number_recordings(title_from_recording_list):
     # Takes date of recording from title str scraped off GoogleDrive page
     # It then converts it to a date object
     # Can now extract ISO week number
-    recDate = (titleId[wk][:10])
-    recDateObj = datetime.datetime.strptime(recDate, '%Y-%m-%d')
-    return (recDateObj.strftime("%V"))
+    recDate = (titleId[title_from_recording_list][:10]) # take date information from string titleId
+    recDateObj = datetime.datetime.strptime(recDate, '%Y-%m-%d') # make date object
+    return (recDateObj.strftime("%V")) # return iso week number
 print(iso_week_number_recordings(3))
 
 
