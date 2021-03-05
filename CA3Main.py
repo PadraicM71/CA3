@@ -252,7 +252,6 @@ def iso_week_number_moodle(week):
     date = date.replace(year=semesterStartYear) # force year on it as its using current year date
     date = date.strftime("%V")
     return date
-
 print(iso_week_number_moodle(5))
 
 def iso_week_number_recordings(wk):
@@ -262,15 +261,15 @@ def iso_week_number_recordings(wk):
     recDate = (titleId[wk][:10])
     recDateObj = datetime.datetime.strptime(recDate, '%Y-%m-%d')
     return (recDateObj.strftime("%V"))
-
 print(iso_week_number_recordings(3))
 
 
 
-# ok experimenting looks good here - keep error free by linking to number of recordings
-n=1 
+# ok experimenting looks good here - keep error free by linking to number of recordings - defined above titleId
+n=1
 while n < number_of_recordings:
     print(iso_week_number_recordings(n))
     n = n+1
+
 
 
