@@ -267,7 +267,7 @@ print(iso_week_number_recordings(3))
 
 # ok experimenting looks good here - keep error free by linking to number of recordings - defined above titleId
 n=1
-while n < number_of_recordings:
+while n < number_of_recordings: # index 0 not used implies dont need <= (only require <)
     print(iso_week_number_recordings(n))
     n = n+1
 
