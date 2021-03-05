@@ -49,7 +49,7 @@ import os
 
 # print(os.listdir())
 
-# for folder , sub_folders , files in os.walk("CA2"):
+# for folder , sub_folders , files in os.walk("wk1"):
 
 #     print("Currently looking at folder: "+ folder)
 #     print('\n')
@@ -70,6 +70,8 @@ for w in os.walk("wk1"):
     print(w)
     print(type(w))
 
-print(os.getcwd())
+# print(os.getcwd())
+
+
 
 

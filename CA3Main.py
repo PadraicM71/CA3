@@ -299,8 +299,11 @@ payload.append(merged_list_to_string(match_week_to_recordings(8))) # merge_list 
 print(payload)
 payload_for_push = (merged_list_to_string(payload))
 
+
+# Testing - It works!! Excellent!!
 n=1
 while n<9: 
     write_summary(n,merged_list_to_string(match_week_to_recordings(n)))
     n = n+1
+
 
