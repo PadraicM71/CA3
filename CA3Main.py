@@ -182,7 +182,6 @@ soup = bs4.BeautifulSoup(res.text,"lxml")
 gdrive = res.text
 
 
-
 # linkId complete list of unique recording google identifiers - starting at index 1.
 # Create a list containing all individual class recording unique 33 characters google ID.
 linkConstruct = []
@@ -225,11 +224,13 @@ def classRecording(number):
     x = '<a href=\"https://drive.google.com/file/d/' + linkId[number] + '/view?usp=sharing\"' + '>' + titleId[number] + '</a>'
     return x # print('<a href=\"https://drive.google.com/file/d/' + linkId[weekNumber] + '/view?usp=sharing\"' + '>' + titleId[weekNumber] + '</a>')
 
-# print(classRecording(2))
 
 
-#----------------------------------------------------------------------------------------------------------
-# Writing Information: (updatesections)
+def read_summary(wk): # Reads summary content of given week
+    summary_content = json.dumps(sec.getsections[wk]['summary'], indent=4, sort_keys=True)
+    return summary_content
+
+
 
 # Function to write to Moodle summary
 # wk is Moodle page section number
@@ -284,8 +285,8 @@ link = '<a href="https://drive.google.com/file/d/1elgdm2482AMcARz_NUVTjg8KBPmoLT
 # Construct file links - Initial experiements!
 def file_links(wkNumber):
     wkx = str(wkNumber)
-    linkSlides = '<a href=' + "https://mikhail-cct.github.io/ca3-test/wk" + wkx + '>Title</a>'
-    linkPDF = "https://mikhail-cct.github.io/ca3-test/wk"+wkx+"/wk"+wkx+".pdf"
+    linkSlides = '<a href=' + "https://mikhail-cct.github.io/ca3-test/wk" + wkx + '>Slides Week ' + wkx + '</a>'
+    linkPDF = '<a href=' + "https://mikhail-cct.github.io/ca3-test/wk" + wkx + "/wk" + wkx + ".pdf" + ">Week" + wkx + '.pdf</a>'
     for w in os.walk("wk"+wkx):
         weekWalk = w
         file_listwk = weekWalk[2]
@@ -295,6 +296,7 @@ def file_links(wkNumber):
         if "slides.md" in file_listwk:
             html_push.append(linkSlides+"<br>")
         print(linkSlides)
+        print(linkPDF)
         return html_push
 
 
@@ -330,3 +332,4 @@ while n<9:
 # print(merged_list_to_string(file_links(3)))
 
 
+# print(read_summary(2))
