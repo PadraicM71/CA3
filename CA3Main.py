@@ -6,7 +6,10 @@ from dateutil import parser
 import datetime
 import bs4
 import re
+import os
 
+
+# This is a year 'switch' to assign to script for each repository its used in.
 semesterStartYear = 2020
 
 '''
@@ -278,6 +281,20 @@ def match_week_to_recordings(week_number):
     return rec
 
 
+# Construct file links - Initial experiements!
+def file_links(wkNumber):
+    wkx = str(wkNumber)
+    linkSlides = "https://mikhail-cct.github.io/ca3-test/wk"+wkx
+    linkPDF = "https://mikhail-cct.github.io/ca3-test/wk"+wkx+"/wk"+wkx+".pdf"
+    for w in os.walk("wk"+wkx):
+        weekWalk = w
+        file_listwk = weekWalk[2]
+        html_push = []
+        if "wk"+wkx+".pdf" in file_listwk:
+            html_push.append(linkPDF+"<br>")
+        if "slides.md" in file_listwk:
+            html_push.append(linkSlides+"<br>")
+        return html_push
 
 
 
@@ -292,6 +309,7 @@ def match_week_to_recordings(week_number):
 
 #Assemble payload for push
 # Final object for push has to be continious string with appropriate HTML tags
+# It will be assembled here
 payload = [] # this will be used for push to moodle
 payload.append("test<br>")
 # print(payload)
@@ -300,10 +318,14 @@ print(payload)
 payload_for_push = (merged_list_to_string(payload))
 
 
-# Testing - It works!! Excellent!!
+# Testing complete push of recordings - It works!! Excellent!!
 n=1
 while n<9: 
-    write_summary(n,merged_list_to_string(match_week_to_recordings(n)))
+    write_summary(n,merged_list_to_string(match_week_to_recordings(n)+file_links(n)))
     n = n+1
+
+
+print (file_links(3))
+print(merged_list_to_string(file_links(3)))
 
 

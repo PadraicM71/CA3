@@ -64,14 +64,40 @@ import os
 #         print("\t File: "+f)
 #     print('\n')
 
-# #
+# # #
 
-for w in os.walk("wk1"):
-    print(w)
-    print(type(w))
+# weekNumber = 1
+# wkx = str(weekNumber)
 
-# print(os.getcwd())
+# for w in os.walk("wk"+wkx):
+#     weekWalk = w
 
+# listwk = weekWalk[2]
+# print (listwk)
 
+# print(weekWalk)
 
+# linkSlides = "https://mikhail-cct.github.io/ca3-test/wk"+wkx
+# linkPDF = "https://mikhail-cct.github.io/ca3-test/wk"+wkx+"/wk"+wkx+".pdf"
+
+# print(linkSlides)
+# print(linkPDF)
+# https://mikhail-cct.github.io/ca3-test/wk1
+# https://mikhail-cct.github.io/ca3-test/wk1.pdf
+
+def file_links(wkNumber):
+    wkx = str(wkNumber)
+    linkSlides = "https://mikhail-cct.github.io/ca3-test/wk"+wkx
+    linkPDF = "https://mikhail-cct.github.io/ca3-test/wk"+wkx+"/wk"+wkx+".pdf"
+    for w in os.walk("wk"+wkx):
+        weekWalk = w
+        file_listwk = weekWalk[2]
+        html_push = []
+        if "wk"+wkx+".pdf" in file_listwk:
+            html_push.append(linkPDF)
+        if "slides.md" in file_listwk:
+            html_push.append(linkSlides)
+        return html_push
+
+print (file_links(3))
 
