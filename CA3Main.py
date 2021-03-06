@@ -285,13 +285,13 @@ link = '<a href="https://drive.google.com/file/d/1elgdm2482AMcARz_NUVTjg8KBPmoLT
 # Construct file links - Initial experiements!
 def file_links(wkNumber):
     wkx = str(wkNumber)
-    
+    # Grab title from html
     index_title = open(f"wk{wkx}/index.html","r").read()
     title_soup = bs4.BeautifulSoup(index_title,"lxml")
-    print(title_soup.select('title')[0].getText())
-
-    linkSlides = '<a href=' + "https://mikhail-cct.github.io/ca3-test/wk" + wkx + '>Slides Week ' + wkx + '</a>'
-    linkPDF = '<a href=' + "https://mikhail-cct.github.io/ca3-test/wk" + wkx + "/wk" + wkx + ".pdf" + ">Week" + wkx + '.pdf</a>'
+    title_notes = title_soup.select('title')[0].getText()
+    # Create links
+    linkSlides = '<a href=' + "https://mikhail-cct.github.io/ca3-test/wk" + wkx + '>Week ' + wkx + " Slides: " + title_notes + '</a>'
+    linkPDF = '<a href=' + "https://mikhail-cct.github.io/ca3-test/wk" + wkx + "/wk" + wkx + ".pdf" + ">Week " + wkx + ' PDF file: ' + title_notes + '</a>'
     for w in os.walk("wk"+wkx):
         weekWalk = w
         file_listwk = weekWalk[2]
