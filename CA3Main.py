@@ -327,10 +327,12 @@ def file_links(wkNumber):
 
 # ---------------DO NOT DELETE-------------------------------------------------
 # Testing complete push of recordings - It works!! Excellent!! Keep it simple!
-n=1
-while n<9: 
-    write_summary(n,merged_list_to_string(match_week_to_recordings(n)+file_links(n)))
-    n+=1
+directory = os.listdir()
+number_of_folders_wkx = len([folder for folder in directory if "wk" in folder])
+week_num_to_update = 1
+while week_num_to_update <= number_of_folders_wkx: 
+    write_summary(week_num_to_update,merged_list_to_string(match_week_to_recordings(week_num_to_update)+file_links(week_num_to_update)))
+    week_num_to_update += 1
 # -----------------------------------------------------------------------------
 
 # print (file_links(3))

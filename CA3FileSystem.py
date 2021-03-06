@@ -91,19 +91,19 @@ import re
 # https://mikhail-cct.github.io/ca3-test/wk1
 # https://mikhail-cct.github.io/ca3-test/wk1.pdf
 
-def file_links(wkNumber):
-    wkx = str(wkNumber)
-    linkSlides = "https://mikhail-cct.github.io/ca3-test/wk"+wkx
-    linkPDF = "https://mikhail-cct.github.io/ca3-test/wk"+wkx+"/wk"+wkx+".pdf"
-    for w in os.walk("wk"+wkx):
-        weekWalk = w
-        file_listwk = weekWalk[2]
-        html_push = []
-        if "wk"+wkx+".pdf" in file_listwk:
-            html_push.append(linkPDF)
-        if "slides.md" in file_listwk:
-            html_push.append(linkSlides)
-        return html_push
+# def file_links(wkNumber):
+#     wkx = str(wkNumber)
+#     linkSlides = "https://mikhail-cct.github.io/ca3-test/wk"+wkx
+#     linkPDF = "https://mikhail-cct.github.io/ca3-test/wk"+wkx+"/wk"+wkx+".pdf"
+#     for w in os.walk("wk"+wkx):
+#         weekWalk = w
+#         file_listwk = weekWalk[2]
+#         html_push = []
+#         if "wk"+wkx+".pdf" in file_listwk:
+#             html_push.append(linkPDF)
+#         if "slides.md" in file_listwk:
+#             html_push.append(linkSlides)
+#         return html_push
 
 # print (file_links(3))
 
@@ -111,9 +111,33 @@ wkx = 1
 
 
 
-# index_title = open('wk1/index.html',"r").read()
-index_title = open(f"wk{wkx}/index.html","r").read()
-title_soup = bs4.BeautifulSoup(index_title,"lxml")
-print(title_soup.select('title')[0].getText())
+# # index_title = open('wk1/index.html',"r").read()
+# index_title = open(f"wk{wkx}/index.html","r").read()
+# title_soup = bs4.BeautifulSoup(index_title,"lxml")
+# print(title_soup.select('title')[0].getText())
 
 # f = open(f"{name}.csv", 'wb') 
+
+
+
+
+weekNumber = 1
+wkx = str(weekNumber)
+
+for w in os.walk("wk"+wkx):
+    weekWalk = w
+
+listwk = weekWalk[2]
+print (listwk)
+
+print(weekWalk)
+
+
+pwd = os.system("pwd")
+# print(pwd)
+
+directory = os.listdir()
+
+number_of_folders_wkx = len([folder for folder in directory if "wk" in folder])
+print(number_of_folders_wkx)
+
