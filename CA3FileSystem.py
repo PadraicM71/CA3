@@ -1,7 +1,13 @@
 #CA3 File System
 
 import os
-
+import requests
+from requests import get, post
+import json
+from dateutil import parser
+import datetime
+import bs4
+import re
 
 '''
 
@@ -99,5 +105,15 @@ def file_links(wkNumber):
             html_push.append(linkSlides)
         return html_push
 
-print (file_links(3))
+# print (file_links(3))
 
+wkx = 1
+
+
+
+# index_title = open('wk1/index.html',"r").read()
+index_title = open(f"wk{wkx}/index.html","r").read()
+title_soup = bs4.BeautifulSoup(index_title,"lxml")
+print(title_soup.select('title')[0].getText())
+
+# f = open(f"{name}.csv", 'wb') 

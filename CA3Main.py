@@ -285,6 +285,11 @@ link = '<a href="https://drive.google.com/file/d/1elgdm2482AMcARz_NUVTjg8KBPmoLT
 # Construct file links - Initial experiements!
 def file_links(wkNumber):
     wkx = str(wkNumber)
+    
+    index_title = open(f"wk{wkx}/index.html","r").read()
+    title_soup = bs4.BeautifulSoup(index_title,"lxml")
+    print(title_soup.select('title')[0].getText())
+
     linkSlides = '<a href=' + "https://mikhail-cct.github.io/ca3-test/wk" + wkx + '>Slides Week ' + wkx + '</a>'
     linkPDF = '<a href=' + "https://mikhail-cct.github.io/ca3-test/wk" + wkx + "/wk" + wkx + ".pdf" + ">Week" + wkx + '.pdf</a>'
     for w in os.walk("wk"+wkx):
@@ -320,16 +325,22 @@ def file_links(wkNumber):
 # print(payload)
 # payload_for_push = (merged_list_to_string(payload))
 
-
+# ---------------DO NOT DELETE-------------------------------------------------
 # Testing complete push of recordings - It works!! Excellent!! Keep it simple!
 n=1
 while n<9: 
     write_summary(n,merged_list_to_string(match_week_to_recordings(n)+file_links(n)))
     n+=1
-
+# -----------------------------------------------------------------------------
 
 # print (file_links(3))
 # print(merged_list_to_string(file_links(3)))
 
+# this is a sample push
+# <a href=https://mikhail-cct.github.io/ca3-test/wk8>Slides Week 8</a>
+# <a href=https://mikhail-cct.github.io/ca3-test/wk8/wk8.pdf>Week8.pdf</a>
 
-# print(read_summary(2))
+# "<a href=\"https://drive.google.com/file/d/1elgdm2482AMcARz_NUVTjg8KBPmoLTxj/view?usp=sharing\">2020-10-06 [17:45-19:44] \u2013 Prog: OO Approaches.mp4</a><br><a href=https://mikhail-cct.github.io/ca3-test/wk2/wk2.pdf>Week2.pdf</a><br><a href=https://mikhail-cct.github.io/ca3-test/wk2>Slides Week 2</a><br>"
+
+
+
