@@ -284,7 +284,7 @@ link = '<a href="https://drive.google.com/file/d/1elgdm2482AMcARz_NUVTjg8KBPmoLT
 # Construct file links - Initial experiements!
 def file_links(wkNumber):
     wkx = str(wkNumber)
-    linkSlides = 'https://mikhail-cct.github.io/ca3-test/wk' + wkx
+    linkSlides = '<a href=' + "https://mikhail-cct.github.io/ca3-test/wk" + wkx + '>Title</a>'
     linkPDF = "https://mikhail-cct.github.io/ca3-test/wk"+wkx+"/wk"+wkx+".pdf"
     for w in os.walk("wk"+wkx):
         weekWalk = w
