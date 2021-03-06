@@ -280,11 +280,11 @@ def match_week_to_recordings(week_number):
         n+=1
     return rec
 
-
+link = '<a href="https://drive.google.com/file/d/1elgdm2482AMcARz_NUVTjg8KBPmoLTxj/view?usp=sharing">2020-10-06 [17:45-19:44] – Prog: OO Approaches.mp4</a>'
 # Construct file links - Initial experiements!
 def file_links(wkNumber):
     wkx = str(wkNumber)
-    linkSlides = "https://mikhail-cct.github.io/ca3-test/wk"+wkx
+    linkSlides = 'https://mikhail-cct.github.io/ca3-test/wk' + wkx
     linkPDF = "https://mikhail-cct.github.io/ca3-test/wk"+wkx+"/wk"+wkx+".pdf"
     for w in os.walk("wk"+wkx):
         weekWalk = w
@@ -294,6 +294,7 @@ def file_links(wkNumber):
             html_push.append(linkPDF+"<br>")
         if "slides.md" in file_listwk:
             html_push.append(linkSlides+"<br>")
+        print(linkSlides)
         return html_push
 
 
@@ -310,22 +311,22 @@ def file_links(wkNumber):
 #Assemble payload for push
 # Final object for push has to be continious string with appropriate HTML tags
 # It will be assembled here
-payload = [] # this will be used for push to moodle
-payload.append("test<br>")
+# payload = [] # this will be used for push to moodle
+# payload.append("test<br>")
+# # print(payload)
+# payload.append(merged_list_to_string(match_week_to_recordings(8))) # merge_list to string for all further additions
 # print(payload)
-payload.append(merged_list_to_string(match_week_to_recordings(8))) # merge_list to string for all further additions
-print(payload)
-payload_for_push = (merged_list_to_string(payload))
+# payload_for_push = (merged_list_to_string(payload))
 
 
-# Testing complete push of recordings - It works!! Excellent!!
+# Testing complete push of recordings - It works!! Excellent!! Keep it simple!
 n=1
 while n<9: 
     write_summary(n,merged_list_to_string(match_week_to_recordings(n)+file_links(n)))
-    n = n+1
+    n+=1
 
 
-print (file_links(3))
-print(merged_list_to_string(file_links(3)))
+# print (file_links(3))
+# print(merged_list_to_string(file_links(3)))
 
 
