@@ -131,36 +131,41 @@ titleId = titleConstruct[:len(titleConstruct)//2]
 titleId.insert(0, "Class recording not available yet - Please try later. ")
 # Insert message at index 0 - can be used at a later stage to represent a case where no recording available yet.
 
+
 # Calculate number of recordings for iteration later.
-number_of_recordings = len(titleId) ############################## used later to calculate iso week - take note!
+number_of_recordings = len(titleId) ############################## used later to calculate/manipulate iso week - take note!
+
+# The above creates 2 lists where the index of each match the recording unique identifier with the correct recording title.
+# Recordings identifiers capture complete.
 
 
 
+'''
 
-#----------------------------------------------------------------------------------------------------------------------------------
-# Takes date of recording from title str scraped off GoogleDrive page
-# It then converts it to a date object
-# Can now extract ISO week number
-# recDate = (titleId[1][:10])
-# recDateObj = datetime.datetime.strptime(recDate, '%Y-%m-%d')
-# print(recDateObj.date())
-# print(recDateObj.strftime("%V"))
-#-------------------------------------------------------------------------------------------------------------------------------------
+Script Functions
 
+'''
 
+# Constructs a complete class recording link (as a string) with html tags ready for push.
+# Uses linkId and titleId from above Regex.
+# Parameter passed is recording number as it appears on Regex generated lists (linkId, titleId)
 def classRecording(number):
-    x = '<a href=\"https://drive.google.com/file/d/' + linkId[number] + '/view?usp=sharing\"' + '>' + titleId[number] + '</a>'
-    return x # print('<a href=\"https://drive.google.com/file/d/' + linkId[weekNumber] + '/view?usp=sharing\"' + '>' + titleId[weekNumber] + '</a>')
+    construct_link_rec = '<a href=\"https://drive.google.com/file/d/' + linkId[number] + '/view?usp=sharing\"' + '>' + titleId[number] + '</a>'
+    return construct_link_rec
 
 
-def read_summary(wk): # Reads summary content of given week
+# Reads summary content of a given week.
+# Parameter passed is week number.
+def read_summary(wk):
     summary_content = json.dumps(sec.getsections[wk]['summary'], indent=4, sort_keys=True)
     return summary_content
 
 
 # Function to write to Moodle summary for specific week.
+# Parameters passed:
 # wk is Moodle page week/summary number.
-def write_summary(wk, link): # update sections wk1 summary 1 etc.
+# link will be the final string of concatenated list items containing appropriate html tags for push.
+def write_summary(wk, link):
     summary = link
     data[0]['summary'] = summary
     data[0]['section'] = wk
@@ -168,23 +173,31 @@ def write_summary(wk, link): # update sections wk1 summary 1 etc.
     return
 
 
+# Function to convert Moodle week name (which is a date, day and month name) to an ISO week number.
+# Parameter is week number.
 def iso_week_number_moodle(week):
     date = parser.parse(list(sec.getsections)[week]['name'].split('-')[0])
-    date = date.replace(year=semesterStartYear) # force year on it as its using current year date
-    date = date.strftime("%V")
+    # Above reads name from Moodle week number and converts it to a date object.
+    date = date.replace(year=semesterStartYear)
+    # Above forces year on it as it was using current year date script is run which could be different.
+    # It is essential to have correct year of semester in order to generate correct ISO week numbers.
+    date = date.strftime("%V") # Now convert it to an ISO week number.
     return date
 
 
+# Function to take date of recording from title str scraped off GoogleDrive page.
+# It then converts it to a date object.
+# Can now extract ISO week number.
+# Parameter passed is index from recording titleId.
 def iso_week_number_recordings(title_from_recording_list):
-    # Takes date of recording from title str scraped off GoogleDrive page
-    # It then converts it to a date object
-    # Can now extract ISO week number
     recDate = (titleId[title_from_recording_list][:10]) # take date information from string titleId
-    recDateObj = datetime.datetime.strptime(recDate, '%Y-%m-%d') # make date object
+    recDateObj = datetime.datetime.strptime(recDate, '%Y-%m-%d') # make it a date object
     return (recDateObj.strftime("%V")) # return iso week number
 
 
-# Merge any list to a string - needed to push string to Moodle
+# Function to merge any list to a string.
+# It is needed to push a string to Moodle that already has appropriate html tags.
+# Parameter passed is the list.
 def merged_list_to_string(any_list):
     merged_list = ''
     for element in any_list:
@@ -192,18 +205,24 @@ def merged_list_to_string(any_list):
     return merged_list
 
 
-# ok experimenting looks good here - keep error free by linking to number of recordings - defined above titleId
+# Function to create a string of recordings for a specific ISO week number.
+# The created string contains appropriate html tags ready for push to Moodle.
+# For the specific week number passed, all the recordings are iterated over to find matching ISO weeks numbers.
+# If there is 1 or more recondings for that week they will be appended to the string.
+# There is no limit to the number of recordings that can be added for a specific week.
+# Equally important, if there is no recording for that week nothing will be returned.
+# Kept error free by linking to number of recordings - defined above.
+# Parameter passed is Moodle week number.
 def match_week_to_recordings(week_number):
     n=1
     rec = []
     while n < number_of_recordings: # index 0 not used implies dont need <= (only require <)
         if iso_week_number_recordings(n) == iso_week_number_moodle(week_number):
-            rec.append(classRecording(n)+"<br>")
+            rec.append(classRecording(n)+"<br>") # appends complete class recording string with html tag.
         n+=1
     return rec
 
-link = '<a href="https://drive.google.com/file/d/1elgdm2482AMcARz_NUVTjg8KBPmoLTxj/view?usp=sharing">2020-10-06 [17:45-19:44] – Prog: OO Approaches.mp4</a>'
-# Construct file links - Initial experiements!
+
 def file_links(wkNumber):
     wkx = str(wkNumber)
     # Grab title from html
@@ -237,3 +256,5 @@ while week_num_to_update < number_of_folders_wkx:
 # -----------------------------------------------------------------------------
 
 
+
+#ENDS
