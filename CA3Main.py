@@ -72,7 +72,6 @@ def call(fname, **kwargs):
 # Rest-Api classes
 ################################################
 
-
 class LocalGetSections(object):
     """Get settings of sections. Requires courseid. Optional you can specify sections via number or id."""
 
@@ -88,97 +87,27 @@ class LocalUpdateSections(object):
         self.updatesections = call(
             'local_wsmanagesections_update_sections', courseid=cid, sections=sectionsdata)
 
-################################################
-# Example
-################################################
-
 
 courseid = "4"  # Exchange with valid id.
 # Get all sections of the course.
 sec = LocalGetSections(courseid)
 
-#----------------------------------------------------------------------------
-# Output readable JSON, but print only summary
-# print(json.dumps(sec.getsections[0]['summary'], indent=4, sort_keys=True))
-
-# # Split the section name by dash and convert the date into the timestamp, it takes the current year, so think of a way for making sure it has the correct year!
-# month = parser.parse(list(sec.getsections)[1]['name'].split('-')[0])
-# # Show the resulting timestamp
-# print(month)
-# # Extract the week number from the start of the calendar year
-# print(month.strftime("%V"))
-
 #  Assemble the payload
 data = [{'type': 'num', 'section': 0, 'summary': '', 'summaryformat': 1, 'visible': 1 , 'highlight': 0, 'sectionformatoptions': [{'name': 'level', 'value': '1'}]}]
 
-# # Assemble the correct summary
-# summary = '<a href="https://mikhail-cct.github.io/ca3-test/wk1/">Week 1: IntroductionTest1</a><br>' # note different quotes
-
-# # Assign the correct summary
-# data[0]['summary'] = summary
-
-# # Set the correct section number
-# data[0]['section'] = 4
-
-# Write the data back to Moodle
-# sec_write = LocalUpdateSections(courseid, data)
-#---------------------------------------------------------------------------------------
-# Writing Information: (updatesections)
-
-
-# # Function to write to Moodle summary
-# # wk is Moodle page section number
-# def writeLink(wk, link): # update sections wk1 section 1 etc
-#     summary = link
-#     data[0]['summary'] = summary
-#     data[0]['section'] = wk
-#     sec_write = LocalUpdateSections(courseid, data)
-#     return
-# link = '<a href="https://drive.google.com/file/d/1elgdm2482AMcARz_NUVTjg8KBPmoLTxj/view?usp=sharing">2020-10-06 [17:45-19:44] – Prog: OO Approaches.mp4</a>'
-# writeLink(2, link)
-
-
-#---------------------------------------------------------------------------------------
-
-# Read Information
 sec = LocalGetSections(courseid)
 
-# print(json.dumps(sec.getsections[0]['summary'], indent=4, sort_keys=True))
-# print(json.dumps(sec.getsections[0]['name'], indent=4, sort_keys=True))
-# print(json.dumps(sec.getsections[0]['sectionnum'], indent=4, sort_keys=True))
-# print("------------------------------------------------------")
-# print(json.dumps(sec.getsections[1]['summary'], indent=4, sort_keys=True))
-# # we want to write the summary!
-# # get back a dictionary from the API - grab key called summary
-# print(json.dumps(sec.getsections[1]['sectionnum'], indent=4, sort_keys=True))
-# print(json.dumps(sec.getsections[1]['name'], indent=4, sort_keys=True))
-# print("------------------------------------------------------")
-# print(json.dumps(sec.getsections[2]['summary'], indent=4, sort_keys=True))
-# print(json.dumps(sec.getsections[2]['sectionnum'], indent=4, sort_keys=True))
-# print(json.dumps(sec.getsections[2]['name'], indent=4, sort_keys=True))
-# print("------------------------------------------------------")
-# print(json.dumps(sec.getsections[15]['summary'], indent=4, sort_keys=True))
-# print("Dates Below -------------------------------------------------------------")
-# Reading Information: (getsections)
-# can now identify way to loop (for) through sections any maybe build dictionary
-# of all of the slides that are present in any of the sections if you like.
-# get section - grab title and start doing things with it.
-# So thats reading our information sorted!
-#--------------------------------------------------------------------------------
 
 
 
-#--------------------------------------------------------------------------------------------------------
-#Recordings
+# Recordings
 '''
 
 # This is initial experiments to capture RECORDING links and titles
 
 '''
 res = requests.get("https://drive.google.com/drive/folders/1pFHUrmpLv9gEJsvJYKxMdISuQuQsd_qX")
-
 soup = bs4.BeautifulSoup(res.text,"lxml")
-
 gdrive = res.text
 
 
@@ -190,10 +119,6 @@ for link in re.finditer(r'"(\S{33})",\S"1pFHUrmpLv9gEJsvJYKxMdISuQuQsd_qX"',gdri
 # Above Regex returns duplicate list - remove last half to have just 1 complete list.
 linkId = linkConstruct[:len(linkConstruct)//2]
 linkId.insert(0, " ") # Insert blank at index 0 - we will use this later to represent case where no recording available yet
-# print(linkId) # debug
-
-
-# https://drive.google.com/file/d/14pVDe0l1SYcpQxqsfW32modTbxhMEIcJ/view?usp=sharing # testing
 
 
 # titleId complete list of unique recording class title identifiers - starting at index 1.
@@ -225,11 +150,9 @@ def classRecording(number):
     return x # print('<a href=\"https://drive.google.com/file/d/' + linkId[weekNumber] + '/view?usp=sharing\"' + '>' + titleId[weekNumber] + '</a>')
 
 
-
 def read_summary(wk): # Reads summary content of given week
     summary_content = json.dumps(sec.getsections[wk]['summary'], indent=4, sort_keys=True)
     return summary_content
-
 
 
 # Function to write to Moodle summary
@@ -240,17 +163,14 @@ def write_summary(wk, link): # update sections wk1 section 1 etc
     data[0]['section'] = wk
     sec_write = LocalUpdateSections(courseid, data)
     return
-# link = '<a href="https://drive.google.com/file/d/1elgdm2482AMcARz_NUVTjg8KBPmoLTxj/view?usp=sharing">2020-10-06 [17:45-19:44] – Prog: OO Approaches.mp4</a>'
 
 
-
-#-----------------------------------------------------------------------------------------------------------
 def iso_week_number_moodle(week):
     date = parser.parse(list(sec.getsections)[week]['name'].split('-')[0])
     date = date.replace(year=semesterStartYear) # force year on it as its using current year date
     date = date.strftime("%V")
     return date
-# print(iso_week_number_moodle(5))
+
 
 def iso_week_number_recordings(title_from_recording_list):
     # Takes date of recording from title str scraped off GoogleDrive page
@@ -259,7 +179,6 @@ def iso_week_number_recordings(title_from_recording_list):
     recDate = (titleId[title_from_recording_list][:10]) # take date information from string titleId
     recDateObj = datetime.datetime.strptime(recDate, '%Y-%m-%d') # make date object
     return (recDateObj.strftime("%V")) # return iso week number
-# print(iso_week_number_recordings(3))
 
 
 # Merge any list to a string - needed to push string to Moodle
@@ -268,7 +187,6 @@ def merged_list_to_string(any_list):
     for element in any_list:
         merged_list += str(element)
     return merged_list
-
 
 
 # ok experimenting looks good here - keep error free by linking to number of recordings - defined above titleId
@@ -305,26 +223,6 @@ def file_links(wkNumber):
         return html_push
 
 
-
-# print(match_week_to_recordings(8))
-
-
-# Experimenting 
-# # Assemble the payload for push to summary in a list for_push
-# for_push = match_week_to_recordings(1)
-# write_summary(5, match_week_to_recordings(1))
-
-
-#Assemble payload for push
-# Final object for push has to be continious string with appropriate HTML tags
-# It will be assembled here
-# payload = [] # this will be used for push to moodle
-# payload.append("test<br>")
-# # print(payload)
-# payload.append(merged_list_to_string(match_week_to_recordings(8))) # merge_list to string for all further additions
-# print(payload)
-# payload_for_push = (merged_list_to_string(payload))
-
 # ---------------DO NOT DELETE-------------------------------------------------
 # Testing complete push of recordings - It works!! Excellent!! Keep it simple!
 directory = os.listdir()
@@ -334,15 +232,5 @@ while week_num_to_update <= number_of_folders_wkx:
     write_summary(week_num_to_update,merged_list_to_string(match_week_to_recordings(week_num_to_update)+file_links(week_num_to_update)))
     week_num_to_update += 1
 # -----------------------------------------------------------------------------
-
-# print (file_links(3))
-# print(merged_list_to_string(file_links(3)))
-
-# this is a sample push
-# <a href=https://mikhail-cct.github.io/ca3-test/wk8>Slides Week 8</a>
-# <a href=https://mikhail-cct.github.io/ca3-test/wk8/wk8.pdf>Week8.pdf</a>
-
-# "<a href=\"https://drive.google.com/file/d/1elgdm2482AMcARz_NUVTjg8KBPmoLTxj/view?usp=sharing\">2020-10-06 [17:45-19:44] \u2013 Prog: OO Approaches.mp4</a><br><a href=https://mikhail-cct.github.io/ca3-test/wk2/wk2.pdf>Week2.pdf</a><br><a href=https://mikhail-cct.github.io/ca3-test/wk2>Slides Week 2</a><br>"
-
 
 

@@ -94,17 +94,25 @@ print(month.strftime("%V"))
 #  Assemble the payload
 data = [{'type': 'num', 'section': 0, 'summary': '', 'summaryformat': 1, 'visible': 1 , 'highlight': 0, 'sectionformatoptions': [{'name': 'level', 'value': '1'}]}]
 
-# Assemble the correct summary
-summary = '<a href="https://mikhail-cct.github.io/ca3-test/wk1/">Week 1: IntroductionTest</a><br>'
 
-# Assign the correct summary
-data[0]['summary'] = summary
+summary = ' '
+def clear(wkk): # clear summary for testing
+    data[0]['summary'] = summary
+    data[0]['section'] = wkk
+    sec_write = LocalUpdateSections(courseid, data)
 
-# Set the correct section number
-data[0]['section'] = 1
 
-# Write the data back to Moodle
-sec_write = LocalUpdateSections(courseid, data)
+clear(1)
+clear(2)
+clear(3)
+clear(4)
+clear(5)
+clear(6)
+clear(7)
+clear(8)
+
 
 sec = LocalGetSections(courseid)
-print(json.dumps(sec.getsections[1]['summary'], indent=4, sort_keys=True))
+# print(json.dumps(sec.getsections[1]['summary'], indent=4, sort_keys=True))
+
+
