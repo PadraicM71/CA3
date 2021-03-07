@@ -1,4 +1,4 @@
-# CA3 Main
+# CA3 script.py
 import requests
 from requests import get, post
 import json
@@ -10,13 +10,16 @@ import os
 
 
 # This is a year 'switch' to assign to script for each repository its used in.
-semesterStartYear = 2020
+# Set the semester start year after script file is inserted in repository.
+# This is required for using ISO week numbers later.
+# Once this is set the script needs no further changes for insertion to any year or
+# any semester repository irrespective of semester number.
+semesterStartYear = 2020 # script year switch
+
 
 '''
 
-# Location to build the main SCRIPT
-# Moodle analysis to take place here
-# Later will merge with CA3FileSystem.py and CA3Recordings.py
+Moodle Plug In
 
 '''
 # Module variables to connect to moodle api:
@@ -25,7 +28,6 @@ semesterStartYear = 2020
 KEY = "8cc87cf406775101c2df87b07b3a170d"
 URL = "https://034f8a1dcb5c.eu.ngrok.io"
 ENDPOINT = "/webservice/rest/server.php"
-
 
 def rest_api_parameters(in_args, prefix='', out_dict=None):
     """Transform dictionary/array structure to a flat dictionary, with key names
@@ -51,7 +53,6 @@ def rest_api_parameters(in_args, prefix='', out_dict=None):
         for key, item in in_args.items():
             rest_api_parameters(item, prefix.format(key), out_dict)
     return out_dict
-
 
 def call(fname, **kwargs):
     """Calls moodle API function with function name fname and keyword arguments.
@@ -91,47 +92,49 @@ class LocalUpdateSections(object):
 courseid = "4"  # Exchange with valid id.
 # Get all sections of the course.
 sec = LocalGetSections(courseid)
-
-#  Assemble the payload
+#  Assemble the payload.
 data = [{'type': 'num', 'section': 0, 'summary': '', 'summaryformat': 1, 'visible': 1 , 'highlight': 0, 'sectionformatoptions': [{'name': 'level', 'value': '1'}]}]
-
 sec = LocalGetSections(courseid)
 
 
 
-
-# Recordings
 '''
 
-# This is initial experiments to capture RECORDING links and titles
+Recordings - Scraping video links and URL construction
 
 '''
+# Scrape appropriate Google Drive page containing video links using BeautifulSoap.
 res = requests.get("https://drive.google.com/drive/folders/1pFHUrmpLv9gEJsvJYKxMdISuQuQsd_qX")
 soup = bs4.BeautifulSoup(res.text,"lxml")
 gdrive = res.text
 
 
-# linkId complete list of unique recording google identifiers - starting at index 1.
+# Recording - linkId - complete list of unique recording google identifiers - starting at index 1.
 # Create a list containing all individual class recording unique 33 characters google ID.
-linkConstruct = []
+# Using Regex and its group capture feature to extract exact link so no further processing needed.
+linkConstruct = [] # create empty list
 for link in re.finditer(r'"(\S{33})",\S"1pFHUrmpLv9gEJsvJYKxMdISuQuQsd_qX"',gdrive):
     linkConstruct.append(link.group(1))
 # Above Regex returns duplicate list - remove last half to have just 1 complete list.
 linkId = linkConstruct[:len(linkConstruct)//2]
-linkId.insert(0, " ") # Insert blank at index 0 - we will use this later to represent case where no recording available yet
+linkId.insert(0, " ") # Insert blank at index 0 - we will use this later to represent case where no recording available yet.
 
 
-# titleId complete list of unique recording class title identifiers - starting at index 1.
+# Recording - titleId - complete list of unique recording class title identifiers - starting at index 1.
 # Create a list containing all individual class recording titles.
+# Using Regex and its group capture feature to extract exact title so no further processing needed.
 titleConstruct = []
 for title in re.finditer(r',"(20\d\d-\d\d-\d\d.*.mp4)","',gdrive):
     titleConstruct.append(title.group(1))
 # Above Regex returns duplicate list - remove last half to have just 1 complete list.
 titleId = titleConstruct[:len(titleConstruct)//2]
 titleId.insert(0, "Class recording not available yet - Please try later. ")
-number_of_recordings = len(titleId) ########################################### used later to calculate iso week - take note!
-# Insert message at index 0 - we will use this later to represent case where no recording available yet
-# print(titleId) # debug
+# Insert message at index 0 - can be used at a later stage to represent a case where no recording available yet.
+
+# Calculate number of recordings for iteration later.
+number_of_recordings = len(titleId) ############################## used later to calculate iso week - take note!
+
+
 
 
 #----------------------------------------------------------------------------------------------------------------------------------
@@ -155,9 +158,9 @@ def read_summary(wk): # Reads summary content of given week
     return summary_content
 
 
-# Function to write to Moodle summary
-# wk is Moodle page section number
-def write_summary(wk, link): # update sections wk1 section 1 etc
+# Function to write to Moodle summary for specific week.
+# wk is Moodle page week/summary number.
+def write_summary(wk, link): # update sections wk1 summary 1 etc.
     summary = link
     data[0]['summary'] = summary
     data[0]['section'] = wk
@@ -228,7 +231,7 @@ def file_links(wkNumber):
 directory = os.listdir()
 number_of_folders_wkx = len([folder for folder in directory if "wk" in folder])
 week_num_to_update = 1
-while week_num_to_update <= number_of_folders_wkx: 
+while week_num_to_update < number_of_folders_wkx: 
     write_summary(week_num_to_update,merged_list_to_string(match_week_to_recordings(week_num_to_update)+file_links(week_num_to_update)))
     week_num_to_update += 1
 # -----------------------------------------------------------------------------
