@@ -204,13 +204,13 @@ def merged_list_to_string(any_list):
         merged_list += str(element)
     return merged_list
 
-
-# Function to create a string of recordings for a specific ISO week number.
+# Function to create required hyperlinks for Recordings to push to Moodle week summary.
+# Creates a string to represent the recordings for a specific ISO week number.
 # The created string contains appropriate html tags ready for push to Moodle.
 # For the specific week number passed, all the recordings are iterated over to find matching ISO weeks numbers.
 # If there is 1 or more recondings for that week they will be appended to the string.
 # There is no limit to the number of recordings that can be added for a specific week.
-# Equally important, if there is no recording for that week nothing will be returned.
+# Equally important, if there is no recording for that week nothing will be returned and no error will be generated.
 # Kept error free by linking to number of recordings - defined above.
 # Parameter passed is Moodle week number.
 def match_week_to_recordings(week_number):
@@ -223,26 +223,32 @@ def match_week_to_recordings(week_number):
     return rec
 
 
+# Function to create required hyperlinks for Slides and PDF docs to push to Moodle week summary.
+# Parameter passed is week number.
 def file_links(wkNumber):
-    wkx = str(wkNumber)
-    # Grab title from html
-    index_title = open(f"wk{wkx}/index.html","r").read()
-    title_soup = bs4.BeautifulSoup(index_title,"lxml")
-    title_notes = title_soup.select('title')[0].getText()
+    wkx = str(wkNumber) # convert week number to string to construst hyperlink.
+    # first get title from index.html
+    index_title = open(f"wk{wkx}/index.html","r").read() # Open index.html for week number.
+    title_soup = bs4.BeautifulSoup(index_title,"lxml") # Using bs4 to parse file.
+    title_notes = title_soup.select('title')[0].getText() # Get title only without tags.
     # Create links
+    # Next construct our hyperlinks as a continious string with correct html tags for push to Moodle.
     linkSlides = '<a href=' + "https://mikhail-cct.github.io/ca3-test/wk" + wkx + '>Week ' + wkx + " Slides: " + title_notes + '</a>'
     linkPDF = '<a href=' + "https://mikhail-cct.github.io/ca3-test/wk" + wkx + "/wk" + wkx + ".pdf" + ">Week " + wkx + ' PDF file: ' + title_notes + '</a>'
     for w in os.walk("wk"+wkx):
-        weekWalk = w
-        file_listwk = weekWalk[2]
-        html_push = []
-        if "wk"+wkx+".pdf" in file_listwk:
+        weekWalk = w # This is a tuple of wk_number folder information
+        file_listwk = weekWalk[2] # Here get the third element of that tuple which is a list of that directory contents.
+        html_push = [] # Create empty list for push to Moodle.
+        if "wk"+wkx+".pdf" in file_listwk: # If the PDF file is present append it with appropriate html tag.
             html_push.append(linkPDF+"<br>")
-        if "slides.md" in file_listwk:
+        if "slides.md" in file_listwk: # If the slides.md file is present append it with appropriate html tag.
             html_push.append(linkSlides+"<br>")
+        # Therefore using above method, if a file is missing it won't return an error.
         print(linkSlides)
         print(linkPDF)
-        return html_push
+        return html_push # returns string with appropriate html tags ready for push to Moodle.
+
+
 
 
 # ---------------DO NOT DELETE-------------------------------------------------

@@ -123,21 +123,25 @@ wkx = 1
 
 weekNumber = 1
 wkx = str(weekNumber)
-
 for w in os.walk("wk"+wkx):
     weekWalk = w
 
-listwk = weekWalk[2]
-print (listwk)
-
 print(weekWalk)
+print(type(weekWalk))
+
+listwk = weekWalk[2]
+
+print (listwk)
+print(type(listwk))
 
 
-pwd = os.system("pwd")
+
+
+# pwd = os.system("pwd")
 # print(pwd)
 
-directory = os.listdir()
+# directory = os.listdir()
 
-number_of_folders_wkx = len([folder for folder in directory if "wk" in folder])
-print(number_of_folders_wkx)
+# number_of_folders_wkx = len([folder for folder in directory if "wk" in folder])
+# print(number_of_folders_wkx)
 
