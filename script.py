@@ -254,7 +254,7 @@ directory = os.listdir() # Creates a list with all files and folders in director
 number_of_folders_wkx = len([folder for folder in directory if "wk" in folder])
 # Above get number of folders in directory containing wk in folder name so we know how many times to loop.
 week_num_to_update = 1 # week 1 will be the first folder.
-while week_num_to_update < number_of_folders_wkx:
+while week_num_to_update <= number_of_folders_wkx:
     write_summary(week_num_to_update,merged_list_to_string(match_week_to_recordings(week_num_to_update)+file_links(week_num_to_update)))
     week_num_to_update += 1
     # Above is writing our summary to Moodle page:
