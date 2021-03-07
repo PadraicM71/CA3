@@ -11,6 +11,14 @@ import re
 
 '''
 
+USED DURING CA BUILD FOR TESTING OF ELEMENTS OF PROJECT
+FINAL SUBMISSION FILE IS script.py
+
+'''
+
+
+'''
+
 # This is initial experiments on FILE SYSTEM management
 
 '''
@@ -28,7 +36,6 @@ import re
 # print(os.listdir())
 
 
-
 # import shutil
 
 # shutil.move('practice.txt','/workspace/General/wk11')
@@ -40,7 +47,6 @@ import re
 # os.listdir()
 
 
-
 # import send2trash
 
 # print(os.listdir())
@@ -48,7 +54,6 @@ import re
 # send2trash.send2trash('practice.txt')
 
 # print(os.listdir())
-
 
 
 # print(os.getcwd())
@@ -107,9 +112,7 @@ import re
 
 # print (file_links(3))
 
-wkx = 1
-
-
+# wkx = 1
 
 # # index_title = open('wk1/index.html',"r").read()
 # index_title = open(f"wk{wkx}/index.html","r").read()
@@ -118,29 +121,25 @@ wkx = 1
 
 # f = open(f"{name}.csv", 'wb') 
 
+# weekNumber = 1
+# wkx = str(weekNumber)
+# for w in os.walk("wk"+wkx):
+#     weekWalk = w
 
+# print(weekWalk)
+# print(type(weekWalk))
 
+# listwk = weekWalk[2]
 
-weekNumber = 1
-wkx = str(weekNumber)
-for w in os.walk("wk"+wkx):
-    weekWalk = w
-
-print(weekWalk)
-print(type(weekWalk))
-
-listwk = weekWalk[2]
-
-print (listwk)
-print(type(listwk))
-
-
+# print (listwk)
+# print(type(listwk))
 
 
 # pwd = os.system("pwd")
 # print(pwd)
 
 # directory = os.listdir()
+# print(directory)
 
 # number_of_folders_wkx = len([folder for folder in directory if "wk" in folder])
 # print(number_of_folders_wkx)

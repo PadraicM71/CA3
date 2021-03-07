@@ -1,7 +1,13 @@
 # Not used anymore
 
+'''
 
+USED DURING CA BUILD FOR TESTING OF ELEMENTS OF PROJECT
+FINAL SUBMISSION FILE IS script.py
 
+'''
+
+'''
 import requests
 import bs4
 import re
@@ -12,8 +18,6 @@ import re
 # This is initial experiments to capture RECORDING links and titles
 
 '''
-
-
 
 res = requests.get("https://drive.google.com/drive/folders/1pFHUrmpLv9gEJsvJYKxMdISuQuQsd_qX")
 
@@ -87,4 +91,4 @@ classRecording(2)
 Ok - recording is complete and ready to merge with CA3Main - Can request a week and return a complete html construct for push to Moodle. Good going!
 
 '''
-
+'''

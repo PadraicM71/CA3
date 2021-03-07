@@ -3,6 +3,14 @@ import json
 from dateutil import parser
 import datetime
 
+'''
+
+USED DURING CA BUILD FOR TESTING OF ELEMENTS OF PROJECT
+FINAL SUBMISSION FILE IS script.py
+
+'''
+
+
 # Module variables to connect to moodle api:
 # Insert token and URL for your site here.
 # Mind that the endpoint can start with "/moodle" depending on your installation.

@@ -1,4 +1,4 @@
-# CA3 
+# CA3 script.py
 import requests
 from requests import get, post
 import json
@@ -204,13 +204,13 @@ def merged_list_to_string(any_list):
         merged_list += str(element)
     return merged_list
 
-
-# Function to create a string of recordings for a specific ISO week number.
+# Function to create required hyperlinks for Recordings to push to Moodle week summary.
+# Creates a string to represent the recordings for a specific ISO week number.
 # The created string contains appropriate html tags ready for push to Moodle.
 # For the specific week number passed, all the recordings are iterated over to find matching ISO weeks numbers.
 # If there is 1 or more recondings for that week they will be appended to the string.
 # There is no limit to the number of recordings that can be added for a specific week.
-# Equally important, if there is no recording for that week nothing will be returned.
+# Equally important, if there is no recording for that week nothing will be returned and no error will be generated.
 # Kept error free by linking to number of recordings - defined above.
 # Parameter passed is Moodle week number.
 def match_week_to_recordings(week_number):
@@ -223,38 +223,43 @@ def match_week_to_recordings(week_number):
     return rec
 
 
+# Function to create required hyperlinks for Slides and PDF docs to push to Moodle week summary.
+# Parameter passed is week number.
 def file_links(wkNumber):
-    wkx = str(wkNumber)
-    # Grab title from html
-    index_title = open(f"wk{wkx}/index.html","r").read()
-    title_soup = bs4.BeautifulSoup(index_title,"lxml")
-    title_notes = title_soup.select('title')[0].getText()
-    # Create links
+    wkx = str(wkNumber) # convert week number to string to construst hyperlink.
+    # first get title from index.html file for the current week passed in the function parameter.
+    index_title = open(f"wk{wkx}/index.html","r").read() # Open index.html for week number.
+    title_soup = bs4.BeautifulSoup(index_title,"lxml") # Using bs4 to parse file.
+    title_notes = title_soup.select('title')[0].getText() # Get title only without tags.
+    # Next construct our hyperlinks as a continious string with correct html tags for push to Moodle.
     linkSlides = '<a href=' + "https://mikhail-cct.github.io/ca3-test/wk" + wkx + '>Week ' + wkx + " Slides: " + title_notes + '</a>'
     linkPDF = '<a href=' + "https://mikhail-cct.github.io/ca3-test/wk" + wkx + "/wk" + wkx + ".pdf" + ">Week " + wkx + ' PDF file: ' + title_notes + '</a>'
     for w in os.walk("wk"+wkx):
-        weekWalk = w
-        file_listwk = weekWalk[2]
-        html_push = []
-        if "wk"+wkx+".pdf" in file_listwk:
+        weekWalk = w # This is a tuple of wk_number folder information
+        file_listwk = weekWalk[2] # Here get the third element of that tuple which is a list of that directory contents.
+        html_push = [] # Create empty list for push to Moodle.
+        if "wk"+wkx+".pdf" in file_listwk: # If the PDF file is present append it with appropriate html tag.
             html_push.append(linkPDF+"<br>")
-        if "slides.md" in file_listwk:
+        if "slides.md" in file_listwk: # If the slides.md file is present append it with appropriate html tag.
             html_push.append(linkSlides+"<br>")
-        print(linkSlides)
-        print(linkPDF)
-        return html_push
+        # Therefore using above method, if a file is missing it won't return an error.
+        # print(linkSlides) # debug
+        # print(linkPDF) # debug
+        return html_push # returns string with appropriate html tags ready for push to Moodle.
 
+########################################################################################################
 
-# ---------------DO NOT DELETE-------------------------------------------------
-# Testing complete push of recordings - It works!! Excellent!! Keep it simple!
-directory = os.listdir()
+# RUN the script. Keep it simple!
+directory = os.listdir() # Creates a list with all files and folders in directory script exists.
 number_of_folders_wkx = len([folder for folder in directory if "wk" in folder])
-week_num_to_update = 1
-while week_num_to_update < number_of_folders_wkx: 
+# Above get number of folders in directory containing wk in folder name so we know how many times to loop.
+week_num_to_update = 1 # week 1 will be the first folder.
+while week_num_to_update < number_of_folders_wkx:
     write_summary(week_num_to_update,merged_list_to_string(match_week_to_recordings(week_num_to_update)+file_links(week_num_to_update)))
     week_num_to_update += 1
-# -----------------------------------------------------------------------------
-
+    # Above is writing our summary to Moodle page:
+    # week Number-(merge our lists to string containing html hyperlinks of: (all recordings that week) plus (files that week)).
+    # repeat this process for the required number of weeks.
 
 
 #ENDS
